@@ -1,0 +1,23 @@
+{
+	"name": "tldr.ai",
+	"version": "0.0.1",
+	"version_name": "0.0.1",
+	"manifest_version": 3,
+	"minimum_chrome_version": "88",
+	"permissions": ["activeTab", "scripting", "tabs", "storage"],
+	"host_permissions": ["<all_urls>"],
+	"content_security_policy": {
+		"extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+	},
+	"icons": {
+		"128": "icon.png"
+	},
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "icon.png",
+			"24": "icon.png",
+			"32": "icon.png"
+		}
+	}
+}

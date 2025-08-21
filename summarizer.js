@@ -1,3 +1,6 @@
+console.log(import.meta.env.VITE_HF_TOKEN);
+console.log(import.meta.env.HF_MODEL);
+
 /**
  *
  * @param {string} text Text to chunk.
@@ -36,12 +39,16 @@ function chunk(text, tokenCount) {
  * @returns {string} Summary text.
  */
 async function getResponse(text) {
+	// TODO: serverless function to call hugging face
+	// so access token is not exposed
 	const response = await fetch(
-		'https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum',
+		`https://api-inference.huggingface.co/models/${
+			import.meta.env.VITE_HF_MODEL
+		}`,
 		{
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${TOKEN}`,
+				Authorization: `Bearer ${import.meta.env.VITE_HF_TOKEN}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
@@ -69,7 +76,7 @@ async function getResponse(text) {
 
 /**
  * Summarizes text.
- * @param {string} text Summarizes text. 
+ * @param {string} text Summarizes text.
  * @returns {string} Summary.
  */
 export async function summarize(text) {

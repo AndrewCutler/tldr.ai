@@ -1,6 +1,3 @@
-console.log(import.meta.env.VITE_HF_TOKEN);
-console.log(import.meta.env.HF_MODEL);
-
 /**
  *
  * @param {string} text Text to chunk.

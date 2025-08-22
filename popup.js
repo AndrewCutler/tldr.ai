@@ -2,7 +2,7 @@ import { Readability } from '@mozilla/readability';
 import { summarize } from './summarizer';
 
 document.addEventListener('DOMContentLoaded', function () {
-	document.querySelector('#tldr').addEventListener('click', function (event) {
+	document.querySelector('#summarize').addEventListener('click', function (event) {
 		// Show loading state
 		const button = event.target;
 		const originalText = button.textContent;
@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
 								);
 
 								const summary = await summarize(textContent);
-								// const summary = await summarize(testText);
 
 								alert(`Summary: ${summary}`);
 							} catch (error) {
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
 								);
 								alert(`Error: ${error.message}`);
 							} finally {
-								// Reset button state
 								button.textContent = originalText;
 								button.disabled = false;
 							}

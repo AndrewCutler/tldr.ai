@@ -1,18 +1,19 @@
 <html>
 	<head>
-		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'wasm-unsafe-eval'; object-src 'self'">
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+		/>
 	</head>
 	<body>
-		<div
-			id="tldr"
-			style="
-				min-width: 400px;
-				min-height: 400px;
-				background: black;
-				color: white;
-			"
-		>
-			<span> TLDR </span>
+		<div class="container">
+			<div class="header row">
+				<span>TLDR</span>
+			</div>
+			<div class="row">
+				<span class="clickable" id="summarize">SUMMARIZE</span>
+			</div>
 		</div>
 		<script type="module" src="popup.js"></script>
 	</body>

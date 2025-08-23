@@ -39,9 +39,9 @@ async function getResponse(text) {
 	// TODO: serverless function to call hugging face
 	// so access token is not exposed
 	const response = await fetch(
-		`https://api-inference.huggingface.co/models/${
-			import.meta.env.VITE_HF_MODEL
-		}`,
+		`https://api-inference.huggingface.co/models/${encodeURIComponent(
+			import.meta.env.VITE_HF_MODEL,
+		)}`,
 		{
 			method: 'POST',
 			headers: {
@@ -73,8 +73,8 @@ async function getResponse(text) {
 
 /**
  * Summarizes text.
- * @param {string} text Summarizes text.
- * @returns {string} Summary.
+ * @param {string} text Text to summarize.
+ * @returns {Promise<string>} Summary.
  */
 export async function summarize(text) {
 	const chunks = chunk(text, 700);

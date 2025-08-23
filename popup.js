@@ -23,12 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					if (tabSummary) {
 						console.log(tabSummary);
-						const { summary } = tabSummary[tab.url];
-						// alert(
-						// 	`Page summarized before: ${JSON.stringify(
-						// 		summary,
-						// 	)}`,
-						// );
+						const { summary } = tabSummary;
 						document.getElementById('redo-popover').showPopover();
 						return;
 					}

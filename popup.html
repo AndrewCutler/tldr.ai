@@ -6,13 +6,26 @@
 			content="script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
 		/>
 	</head>
-	<body>
+	<body class="dark-bg">
 		<div class="container">
 			<div class="header row">
 				<span>TLDR</span>
 			</div>
 			<div class="row">
 				<span class="clickable" id="summarize">SUMMARIZE</span>
+			</div>
+		</div>
+		<div id="redo-popover" class="dark-bg" popover>
+			<div class="redo-popover-container">
+				<div>This site has been summarized before.</div>
+				<div class="button-row">
+					<div>
+						<button>Resummarize</button>
+					</div>
+					<div>
+						<button>Show previous</button>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script type="module" src="popup.js"></script>

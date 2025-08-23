@@ -3,11 +3,27 @@ html {
 }
 
 body {
+	margin: 0;
+	min-height: 120px;
+}
+
+button {
+	background: #133;
+	border-color: #acc;
+	color: #acc;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 0.2rem;
+}
+
+button:hover {
+	background: #455;
+}
+
+.dark-bg {
 	background: #133;
 	color: #acc;
 	font-weight: 500;
-	margin: 0;
-	min-height: 120px;
 }
 
 .container {
@@ -30,4 +46,16 @@ body {
 
 .clickable {
 	cursor: pointer;
+}
+
+.redo-popover-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.button-row {
+	display: flex;
+	gap: 2rem;
+	justify-content: flex-end;
 }

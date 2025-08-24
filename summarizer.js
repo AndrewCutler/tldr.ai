@@ -1,5 +1,9 @@
+import { loginfo } from './debug';
+
+const MAX_SUMMARY_LENGTH = 1500;
+
 /**
- *
+ * Breaks long text down into smaller chunks for separate summarizations.
  * @param {string} text Text to chunk.
  * @param {number} tokenCount Number of tokens per chunk.
  * @returns {string[]} Array of input text broken into chunks.
@@ -83,9 +87,18 @@ export async function summarize(text) {
 		for (const c of chunks) {
 			const summary = await getResponse(c);
 			summaries.push(summary);
+			loginfo({ c, summary });
+		}
+
+		const joined = summaries.join(' ');
+
+		if (joined.length < MAX_SUMMARY_LENGTH) {
+			loginfo({ joined });
+			return joined;
 		}
 
 		const summary = await getResponse(summaries.join(' '));
+		loginfo({ joined, summary });
 
 		return summary;
 	} catch (e) {

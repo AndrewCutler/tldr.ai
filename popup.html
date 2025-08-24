@@ -6,24 +6,37 @@
 			content="script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
 		/>
 	</head>
-	<body class="dark-bg">
-		<div class="container">
+	<body>
+		<!-- MAIN CONTENT -->
+		<div class="container dark-bg">
 			<div class="header row">
-				<span>TLDR</span>
+				<span>TLDR.ai</span>
 			</div>
 			<div class="row">
 				<span class="clickable" id="summarize">SUMMARIZE</span>
+				<span id="loader"></span>
+				<span id="summary"></span>
+			</div>
+			<div class="row footer">
+				<div>About</div>
+				<div>Help</div>
 			</div>
 		</div>
-		<div id="redo-popover" class="dark-bg" popover>
-			<div class="redo-popover-container">
+
+		<!-- POPOVER -->
+		<div id="redo-popover" popover>
+			<div class="redo-popover-container dark-bg">
 				<div>This site has been summarized before.</div>
 				<div class="button-row">
 					<div>
-						<button>Resummarize</button>
+						<button class="clickable" id="resummarize-button">
+							Resummarize
+						</button>
 					</div>
 					<div>
-						<button>Show previous</button>
+						<button class="clickable" id="show-previous-button">
+							Show previous
+						</button>
 					</div>
 				</div>
 			</div>

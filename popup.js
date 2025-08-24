@@ -1,16 +1,73 @@
 import { Readability } from '@mozilla/readability';
 import { summarize } from './summarizer';
 import { getSiteSummary, setSiteSummary } from './storage';
+import { loginfo } from './debug';
+
+let summarizeButton;
+let loader;
+let summaryElement;
+let previousSummary = '';
+
+function showLoader() {
+	summarizeButton.style.display = 'none';
+	summaryElement.style.display = 'none';
+	loader.style.display = 'block';
+}
+
+function showSummarizeButton() {
+	summarizeButton.style.display = 'flex';
+	loader.style.display = 'none';
+	summaryElement.style.display = 'none';
+}
+
+function showSummary(summary) {
+	summarizeButton.style.display = 'none';
+	loader.style.display = 'none';
+	summaryElement.style.display = 'block';
+	summaryElement.innerText = summary;
+}
+
+/**
+ * Handles the result of the executed script.
+ * @param {InjectionResult} res InjectionResult. See {@link https://developer.chrome.com/docs/extensions/reference/api/scripting#type-InjectionResult}.
+ */
+async function handle(res, tab) {
+	try {
+		const [{ result: outerHTML }] = res;
+		const document = new DOMParser().parseFromString(
+			outerHTML,
+			'text/html',
+		);
+		const { textContent } = new Readability(document).parse();
+
+		const cleaned = textContent
+			.replace(/[\r\n\t]/g, '')
+			.replace(/\s{2,}/g, '')
+			.trim();
+
+		loginfo({ cleaned });
+
+		const summary = await summarize(cleaned);
+
+		loginfo({ summary });
+
+		await setSiteSummary(tab.url, summary);
+		showSummary(summary);
+	} catch (error) {
+		console.error('Error during summarization:', error);
+		alert(`Error: ${error.message}`);
+	}
+}
 
 document.addEventListener('DOMContentLoaded', function () {
+	summarizeButton = document.querySelector('#summarize');
+	loader = document.querySelector('#loader');
+	summaryElement = document.querySelector('#summary');
+
 	document
 		.querySelector('#summarize')
-		.addEventListener('click', async function (event) {
-			// Show loading state
-			const button = event.target;
-			const originalText = button.textContent;
-			button.textContent = 'Loading...';
-			button.disabled = true;
+		.addEventListener('click', async function () {
+			showLoader();
 
 			chrome.tabs.query(
 				{ active: true, lastFocusedWindow: true },
@@ -21,71 +78,78 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					const tabSummary = await getSiteSummary(tab.url);
 
-					if (tabSummary) {
-						console.log(tabSummary);
-						const { summary } = tabSummary;
-						document.getElementById('redo-popover').showPopover();
-						return;
-					}
-
-					function getDocument() {
-						return document.documentElement.outerHTML;
-					}
+					// if (tabSummary) {
+					// 	const { summary } = tabSummary;
+					// 	previousSummary = summary;
+					// 	document.getElementById('redo-popover').showPopover();
+					// 	return;
+					// }
 
 					try {
 						chrome.scripting
 							?.executeScript({
 								target: { tabId: tab.id },
-								func: getDocument,
+								func: function () {
+									return document.documentElement.outerHTML;
+								},
 							})
-							.then(async function ([res]) {
-								try {
-									const { result: outerHTML } = res;
-									const document =
-										new DOMParser().parseFromString(
-											outerHTML,
-											'text/html',
-										);
-									const { textContent } = new Readability(
-										document,
-									).parse();
-
-									console.log(
-										'Extracted text length:',
-										textContent.length,
-									);
-
-									const summary = await summarize(
-										textContent,
-									);
-
-									await setSiteSummary(tab.url, summary);
-
-									alert(`Summary: ${summary}`);
-								} catch (error) {
-									console.error(
-										'Error during summarization:',
-										error,
-									);
-									alert(`Error: ${error.message}`);
-								} finally {
-									button.textContent = originalText;
-									button.disabled = false;
-								}
-							})
-							.catch(function (error) {
-								console.error('Error executing script:', error);
-								alert('Error: Failed to extract page content');
-								button.textContent = originalText;
-								button.disabled = false;
+							.then(function (result) {
+								handle(result, tab);
 							});
+						// .then(async function ([res]) {
+						// 	try {
+						// 		const { result: outerHTML } = res;
+						// 		const document =
+						// 			new DOMParser().parseFromString(
+						// 				outerHTML,
+						// 				'text/html',
+						// 			);
+						// 		const { textContent } = new Readability(
+						// 			document,
+						// 		).parse();
+
+						// 		const cleaned = textContent
+						// 			.replace(/[\r\n\t]/g, '')
+						// 			.replace(/\s{2,}/g, '')
+						// 			.trim();
+
+						// 		loginfo({ cleaned });
+
+						// 		const summary = await summarize(cleaned);
+
+						// 		loginfo({ summary });
+
+						// 		await setSiteSummary(tab.url, summary);
+						// 		showSummary(summary);
+						// 	} catch (error) {
+						// 		console.error(
+						// 			'Error during summarization:',
+						// 			error,
+						// 		);
+						// 		alert(`Error: ${error.message}`);
+						// 	}
+						// })
+						// .catch(function (error) {
+						// 	console.error('Error executing script:', error);
+						// 	alert('Error: Failed to extract page content');
+						// });
 					} catch (error) {
 						console.error('Error in main process:', error);
 						alert('Error: Failed to process page');
-						button.textContent = originalText;
-						button.disabled = false;
 					}
 				},
 			);
+		});
+
+	document
+		.querySelector('#show-previous-button')
+		.addEventListener('click', function (event) {
+			console.log(previousSummary);
+		});
+
+	document
+		.querySelector('#resummarize-button')
+		.addEventListener('click', function (event) {
+			console.log(event, 'RESUMM  ');
 		});
 });

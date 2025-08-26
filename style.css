@@ -12,6 +12,7 @@ button {
 	border: inherit;
 	color: inherit;
 	background: inherit;
+	cursor: pointer;
 }
 
 .dark-bg {
@@ -74,7 +75,18 @@ button {
 }
 
 #summary {
+	display: none;
+	flex-direction: column;
+}
+
+#summary span {
 	padding: 1rem;
+}
+
+#summary div {
+	display: flex;
+	justify-content: center;
+	padding: 0.25rem 0;
 }
 
 .button-row {

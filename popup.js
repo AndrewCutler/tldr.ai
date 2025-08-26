@@ -7,6 +7,7 @@ let summarizeButton;
 let loader;
 let summaryElement;
 let previousSummary = '';
+let redoPopover;
 
 function showLoader() {
 	summarizeButton.style.display = 'none';
@@ -23,8 +24,8 @@ function showSummarizeButton() {
 function showSummary(summary) {
 	summarizeButton.style.display = 'none';
 	loader.style.display = 'none';
-	summaryElement.style.display = 'block';
-	summaryElement.innerText = summary;
+	summaryElement.style.display = 'flex';
+	summaryElement.children[0].innerText = summary;
 }
 
 /**
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	summarizeButton = document.querySelector('#summarize');
 	loader = document.querySelector('#loader');
 	summaryElement = document.querySelector('#summary');
+	redoPopover = document.querySelector('#redo-popover');
 
 	document
 		.querySelector('#summarize')
@@ -78,12 +80,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					const tabSummary = await getSiteSummary(tab.url);
 
-					// if (tabSummary) {
-					// 	const { summary } = tabSummary;
-					// 	previousSummary = summary;
-					// 	document.getElementById('redo-popover').showPopover();
-					// 	return;
-					// }
+					if (tabSummary) {
+						const { summary } = tabSummary;
+						previousSummary = summary;
+						redoPopover.showPopover();
+						return;
+					}
 
 					try {
 						chrome.scripting
@@ -96,43 +98,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							.then(function (result) {
 								handle(result, tab);
 							});
-						// .then(async function ([res]) {
-						// 	try {
-						// 		const { result: outerHTML } = res;
-						// 		const document =
-						// 			new DOMParser().parseFromString(
-						// 				outerHTML,
-						// 				'text/html',
-						// 			);
-						// 		const { textContent } = new Readability(
-						// 			document,
-						// 		).parse();
-
-						// 		const cleaned = textContent
-						// 			.replace(/[\r\n\t]/g, '')
-						// 			.replace(/\s{2,}/g, '')
-						// 			.trim();
-
-						// 		loginfo({ cleaned });
-
-						// 		const summary = await summarize(cleaned);
-
-						// 		loginfo({ summary });
-
-						// 		await setSiteSummary(tab.url, summary);
-						// 		showSummary(summary);
-						// 	} catch (error) {
-						// 		console.error(
-						// 			'Error during summarization:',
-						// 			error,
-						// 		);
-						// 		alert(`Error: ${error.message}`);
-						// 	}
-						// })
-						// .catch(function (error) {
-						// 	console.error('Error executing script:', error);
-						// 	alert('Error: Failed to extract page content');
-						// });
 					} catch (error) {
 						console.error('Error in main process:', error);
 						alert('Error: Failed to process page');
@@ -141,15 +106,20 @@ document.addEventListener('DOMContentLoaded', function () {
 			);
 		});
 
+	document.querySelector('#dismiss').addEventListener('click', function () {
+		showSummarizeButton();
+	});
+
 	document
 		.querySelector('#show-previous-button')
-		.addEventListener('click', function (event) {
-			console.log(previousSummary);
+		.addEventListener('click', function () {
+			showSummary(previousSummary);
+			redoPopover.hidePopover();
 		});
 
 	document
 		.querySelector('#resummarize-button')
 		.addEventListener('click', function (event) {
-			console.log(event, 'RESUMM  ');
+			redoPopover.hidePopover();
 		});
 });

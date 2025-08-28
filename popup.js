@@ -109,7 +109,7 @@ function buildSummary(skipPrevious) {
 	);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+function registerEventListeners() {
 	summarizeButton = document.querySelector('#summarize');
 	loader = document.querySelector('#loader');
 	summaryElement = document.querySelector('#summary');
@@ -136,4 +136,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			UI.hidePopover();
 			buildSummary(true);
 		});
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+	registerEventListeners();
 });

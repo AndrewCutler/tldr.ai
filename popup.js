@@ -116,6 +116,9 @@ function registerEventListeners() {
 	redoPopover = document.querySelector('#redo-popover');
 
 	document.querySelector('#summarize').addEventListener('click', function () {
+		chrome.runtime.sendMessage('test', function (res) {
+			console.log(res);
+		});
 		buildSummary();
 	});
 

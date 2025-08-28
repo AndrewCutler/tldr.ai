@@ -29,9 +29,11 @@ button {
 }
 
 .container .row.header {
-	flex-grow: 1;
 	border-bottom: 2px solid #acc;
 	font-size: large;
+	max-height: 100px;
+	min-width: 30px;
+	flex: 1 1 30px;
 }
 
 .container .row:not(.header):not(.footer) {

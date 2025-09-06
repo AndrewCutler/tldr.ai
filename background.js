@@ -1,10 +1,18 @@
 import { summarize } from './summarizer';
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-	(async () => {
-		const summary = await summarize(message);
-		sendResponse({ summary });
-	})();
+	if ('type' in message === false) {
+		throw new Error('all messages must have a type');
+	}
 
-	return true;
+	if (message.type === 'summarize') {
+		(async () => {
+			const summary = await summarize(message.data);
+			sendResponse({ summary });
+		})();
+
+		return true;
+	}
+
+	console.warn('unhandled message:', message);
 });

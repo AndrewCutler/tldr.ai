@@ -88,18 +88,15 @@ export async function summarize(text) {
 		for (const c of chunks) {
 			const summary = await getResponse(c);
 			summaries.push(summary);
-			console.log({ c, summary });
 		}
 
 		const joined = summaries.join(' ');
 
 		if (joined.length < MAX_SUMMARY_LENGTH) {
-			console.log({ joined });
 			return joined;
 		}
 
 		const summary = await getResponse(summaries.join(' '));
-		console.log({ joined, summary });
 
 		return summary;
 	} catch (e) {

@@ -57,14 +57,13 @@ async function handleDocument(res, tab) {
 			.replace(/\s{2,}/g, '')
 			.trim();
 
-		console.log({ cleaned });
-
-		const summary = '';
-
-		chrome.runtime.sendMessage(cleaned, async function () {
-			await setSiteSummary(tab.url, summary);
-			UI.showSummary(summary);
-		});
+		chrome.runtime.sendMessage(
+			{ data: cleaned, type: 'summarize' },
+			async function ({ summary }) {
+				await setSiteSummary(tab.url, summary);
+				UI.showSummary(summary);
+			},
+		);
 	} catch (error) {
 		console.error('Error during summarization:', error);
 		alert(`Error: ${error.message}`);
@@ -116,9 +115,6 @@ function registerEventListeners() {
 	redoPopover = document.querySelector('#redo-popover');
 
 	document.querySelector('#summarize').addEventListener('click', function () {
-		// chrome.runtime.sendMessage('test', function (res) {
-		// 	console.log(res);
-		// });
 		buildSummary();
 	});
 

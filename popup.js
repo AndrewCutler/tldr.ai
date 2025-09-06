@@ -114,7 +114,7 @@ function registerEventListeners() {
 	summaryElement = document.querySelector('#summary');
 	redoPopover = document.querySelector('#redo-popover');
 
-	document.querySelector('#summarize').addEventListener('click', function () {
+	summarizeButton.addEventListener('click', function () {
 		buildSummary();
 	});
 
@@ -135,6 +135,14 @@ function registerEventListeners() {
 			UI.hidePopover();
 			buildSummary(true);
 		});
+
+	document.querySelector('#github').addEventListener('click', function () {
+		chrome.runtime.sendMessage({ type: 'github' });
+	});
+
+	document.querySelector('#help').addEventListener('click', function () {
+		throw new Error('not implemented');
+	});
 }
 
 document.addEventListener('DOMContentLoaded', function () {

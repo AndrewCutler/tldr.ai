@@ -14,5 +14,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 		return true;
 	}
 
+	if (message.type === 'github') {
+		chrome.tabs.create({ url: 'https://github.com/AndrewCutler/tldr.ai' });
+	}
+
 	console.warn('unhandled message:', message);
 });

@@ -1,7 +1,7 @@
+/// <reference types="chrome"/>
+
 import { Readability } from '@mozilla/readability';
-import { summarize } from './summarizer';
 import { getSiteSummary, setSiteSummary } from './storage';
-import { loginfo } from './debug';
 
 let summarizeButton;
 let loader;
@@ -43,7 +43,7 @@ class UI {
  * Handles the result of the executed script.
  * @param {InjectionResult} res InjectionResult. See {@link https://developer.chrome.com/docs/extensions/reference/api/scripting#type-InjectionResult}.
  */
-async function handle(res, tab) {
+async function handleDocument(res, tab) {
 	try {
 		const [{ result: outerHTML }] = res;
 		const document = new DOMParser().parseFromString(
@@ -57,14 +57,14 @@ async function handle(res, tab) {
 			.replace(/\s{2,}/g, '')
 			.trim();
 
-		loginfo({ cleaned });
+		console.log({ cleaned });
 
-		const summary = await summarize(cleaned);
+		const summary = '';
 
-		loginfo({ summary });
-
-		await setSiteSummary(tab.url, summary);
-		UI.showSummary(summary);
+		chrome.runtime.sendMessage(cleaned, async function () {
+			await setSiteSummary(tab.url, summary);
+			UI.showSummary(summary);
+		});
 	} catch (error) {
 		console.error('Error during summarization:', error);
 		alert(`Error: ${error.message}`);
@@ -99,7 +99,7 @@ function buildSummary(skipPrevious) {
 						},
 					})
 					.then(function (result) {
-						handle(result, tab);
+						handleDocument(result, tab);
 					});
 			} catch (error) {
 				console.error('Error in main process:', error);
@@ -116,9 +116,9 @@ function registerEventListeners() {
 	redoPopover = document.querySelector('#redo-popover');
 
 	document.querySelector('#summarize').addEventListener('click', function () {
-		chrome.runtime.sendMessage('test', function (res) {
-			console.log(res);
-		});
+		// chrome.runtime.sendMessage('test', function (res) {
+		// 	console.log(res);
+		// });
 		buildSummary();
 	});
 

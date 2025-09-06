@@ -62,7 +62,7 @@ tldr.ai/
 When developing:
 
 1. **Edit source files** in the root directory
-2. **Run `npm run dev`** for automatic rebuilding
+2. **Run `npm run watch`** for automatic rebuilding
 3. **Reload the extension** in `chrome://extensions/` (click the refresh icon)
 4. **Test changes** by clicking the extension icon
 
@@ -79,8 +79,3 @@ When developing:
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
-
-## License
-
-[Add your license here]
-

@@ -1,4 +1,10 @@
+import { summarize } from './summarizer';
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-	console.log(message, sender);
-	sendResponse({ status: 'hello' });
+	(async () => {
+		const summary = await summarize(message);
+		sendResponse({ summary });
+	})();
+
+	return true;
 });

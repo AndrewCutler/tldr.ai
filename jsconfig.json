@@ -1,0 +1,8 @@
+{
+	"compilerOptions": {
+		"types": ["chrome"],
+		"moduleResolution": "node",
+		"target": "ESNext",
+		"module": "ESNext"
+	}
+}

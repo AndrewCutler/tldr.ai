@@ -1,5 +1,3 @@
-import { loginfo } from './debug';
-
 const MAX_SUMMARY_LENGTH = 1500;
 
 /**
@@ -61,7 +59,10 @@ async function getResponse(text) {
 		},
 	);
 
-	if (response.status === 200) {
+	if (
+		response.status === 200 &&
+		response.headers.get('content-type').includes('application/json')
+	) {
 		const data = await response.json();
 
 		if (Array.isArray(data) && 'summary_text' in data[0]) {
@@ -87,18 +88,18 @@ export async function summarize(text) {
 		for (const c of chunks) {
 			const summary = await getResponse(c);
 			summaries.push(summary);
-			loginfo({ c, summary });
+			console.log({ c, summary });
 		}
 
 		const joined = summaries.join(' ');
 
 		if (joined.length < MAX_SUMMARY_LENGTH) {
-			loginfo({ joined });
+			console.log({ joined });
 			return joined;
 		}
 
 		const summary = await getResponse(summaries.join(' '));
-		loginfo({ joined, summary });
+		console.log({ joined, summary });
 
 		return summary;
 	} catch (e) {

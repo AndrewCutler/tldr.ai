@@ -6,6 +6,7 @@
 	"minimum_chrome_version": "88",
 	"permissions": ["activeTab", "scripting", "tabs", "storage"],
 	"host_permissions": ["<all_urls>"],
+	"homepage_url": "https://github.com/AndrewCutler/tldr.ai",
 	"content_security_policy": {
 		"extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
 	},
@@ -13,7 +14,8 @@
 		"128": "icon.png"
 	},
 	"background": {
-		"service_worker": "background.js"
+		"service_worker": "background.js",
+		"type": "module"
 	},
 	"action": {
 		"default_popup": "popup.html",

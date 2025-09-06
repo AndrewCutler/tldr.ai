@@ -118,6 +118,14 @@ function registerEventListeners() {
 		buildSummary();
 	});
 
+	document
+		.querySelector('#copy')
+		.addEventListener('click', async function () {
+			await navigator.clipboard.writeText(
+				summaryElement.children[0].innerText,
+			);
+		});
+
 	document.querySelector('#dismiss').addEventListener('click', function () {
 		UI.showSummarizeButton();
 	});

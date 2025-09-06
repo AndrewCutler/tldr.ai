@@ -39,7 +39,8 @@ function chunk(text, tokenCount) {
  */
 async function getResponse(text) {
 	// TODO: serverless function to call hugging face
-	// so access token is not exposed
+	// so access token is not exposed.
+    // Better yet, use local inference.
 	const response = await fetch(
 		`https://api-inference.huggingface.co/models/${encodeURIComponent(
 			import.meta.env.VITE_HF_MODEL,
@@ -82,10 +83,12 @@ async function getResponse(text) {
  * @returns {Promise<string>} Summary.
  */
 export async function summarize(text) {
+	console.log(text, text.length);
 	const chunks = chunk(text, 700);
 	const summaries = [];
 	try {
 		for (const c of chunks) {
+			console.log(c.split(' ').length);
 			const summary = await getResponse(c);
 			summaries.push(summary);
 		}

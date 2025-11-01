@@ -1,0 +1,1 @@
+Compress-Archive -Path "dist\*" -DestinationPath "tldr-ai.zip" -Force

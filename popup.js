@@ -30,6 +30,7 @@ class UI {
 	}
 
 	static showPopover() {
+		summarizeButton.style.display = 'none';
 		redoPopover.showPopover();
 	}
 
@@ -71,7 +72,7 @@ async function handleDocument(res, tab) {
 }
 
 function buildSummary(skipPrevious) {
-	UI.showLoader();
+	// UI.showLoader();
 
 	chrome.tabs.query(
 		{ active: true, lastFocusedWindow: true },
@@ -88,6 +89,8 @@ function buildSummary(skipPrevious) {
 				redoPopover.showPopover();
 				return;
 			}
+
+			UI.showLoader();
 
 			try {
 				chrome.scripting
@@ -121,9 +124,20 @@ function registerEventListeners() {
 	document
 		.querySelector('#copy')
 		.addEventListener('click', async function () {
-			await navigator.clipboard.writeText(
-				summaryElement.children[0].innerText,
-			);
+			try {
+				await navigator.clipboard.writeText(
+					summaryElement.children[0].innerText,
+				);
+			} catch (e) {
+				console.error(e);
+				return;
+			}
+
+			const copyButton = document.querySelector('#copy button');
+			copyButton.innerText = 'Copied';
+			setTimeout(() => {
+				copyButton.innerText = 'Copy';
+			}, 900);
 		});
 
 	document.querySelector('#dismiss').addEventListener('click', function () {

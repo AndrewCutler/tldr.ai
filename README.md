@@ -39,6 +39,12 @@ A Chrome extension that provides AI-powered summarization of web pages.
     - Click "SUMMARIZE" to generate a summary of the current page
     - If the page has been summarized before, you'll see options to show the previous summary or generate a new one
 
+## For Developers
+Run with:
+    ```bash
+    npm run watch
+    ```
+
 ## Project Structure
 
 ```
